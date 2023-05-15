@@ -9,20 +9,21 @@ import SwiftUI
 
 struct FeedView: View {
     @State private var showNewTweetView = false
-    @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var viewModel = FeedViewModel()
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             ScrollView {
-                LazyVStack{
-                    ForEach(0 ... 20, id: \.self) { _ in
-                        TweetRowView()
+                LazyVStack {
+                    ForEach(viewModel.tweets) { tweet in
+                        TweetRowView(tweet: tweet)
                             .padding()
                     }
                 }
             }
             
             Button {
+                print("New tweet")
                 showNewTweetView.toggle()
             } label: {
                 Image("tweet_Post_Write")
@@ -35,10 +36,15 @@ struct FeedView: View {
             .foregroundColor(.white)
             .clipShape(Circle())
             .padding()
-            .fullScreenCover(isPresented: $showNewTweetView) {
-                NewTweetView()
+            .fullScreenCover(isPresented: $showNewTweetView, onDismiss: {
+                viewModel.fetchTweets()
+            }) {
+               NewTweetView()
             }
         }
+//        .navigationTitle("Home")
+        .navigationBarTitleDisplayMode(.inline)
+       
     }
 }
 

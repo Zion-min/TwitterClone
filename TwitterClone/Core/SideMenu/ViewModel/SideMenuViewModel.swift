@@ -17,6 +17,7 @@ enum SideMenuViewModel: Int, CaseIterable {
         switch self {
         case .profile: return "Profile"
         case .lists: return "Lists"
+  
         case .bookmarks: return "Bookmarks"
         case .logout: return "Logout"
         }
